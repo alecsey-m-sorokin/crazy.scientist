@@ -116,6 +116,13 @@ xxx_GetAsyncResponse = GetAsyncResponse(regToken_crazy_scientist, TokenAsync)
 print(xxx_GetAsyncResponse)
 GetAsyncResponse_ResultId = xxx_GetAsyncResponse['ResultId']
 print('GetAsyncResponse_ResultId = ', GetAsyncResponse_ResultId)
+CheckGetAsyncResponse_BonusGameId = xxx_GetAsyncResponse['SpinResult']['DiceGame']
+if CheckGetAsyncResponse_BonusGameId is None:
+    GetAsyncResponse_BonusGameId = 'no bonus game'
+else:
+    GetAsyncResponse_BonusGameId = xxx_GetAsyncResponse['SpinResult']['DiceGame']['Id']
+print('GetAsyncResponse_BonusGameId = ', GetAsyncResponse_BonusGameId)
+
 
 BetSum = 'Bet Sum = ' + str(xxx_GetAsyncResponse["BetSum"])
 WinSum = 'Win Sum = ' + str(xxx_GetAsyncResponse["WinInfo"]["WinSum"])
