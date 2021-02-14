@@ -37,5 +37,6 @@ class APIdata:
     cntLineBet = '25'
     # TokenAsync = ''
     TokenAsync_2 = ''
+    CardIndex = '2'
     mobile_platform = '&MobilePlatform=false'
     # query = 'gameURL=' + gameURL + '&frontURL=' + frontURL + '&partnerURL=' + partnerURL + '&partnerId' + partnerID + '&gameID' + gameID + '&userID' + userID + '&currency' + currency

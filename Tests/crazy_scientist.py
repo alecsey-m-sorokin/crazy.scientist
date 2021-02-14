@@ -110,9 +110,43 @@ def DiceBonusGame(Hash, regToken, rId, bgId, sId, info):
 # @pytest.mark.parametrize(regToken_crazy_scientist, TokenAsync)
 def GetAsyncResponse_DiceBonusGame(regToken, TokenAsyncDice):
     hash_GetAsyncResponse_DiceBonusGame = hashlib.md5(('GetAsyncResponse/' + TokenAsyncDice + A.gameKey).encode('utf-8')).hexdigest()
-    print('hash_GetAsyncResponse = ', hash_GetAsyncResponse_DiceBonusGame)
+    print('hash_GetAsyncResponseDice = ', hash_GetAsyncResponse_DiceBonusGame)
     params_GetAsyncResponse_DiceBonusGame = {'Hash': hash_GetAsyncResponse_DiceBonusGame, 'Token': regToken_crazy_scientist, 'TokenAsync': TokenAsyncDice}
     response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': hash_GetAsyncResponse_DiceBonusGame, 'Token': regToken, 'TokenAsync': TokenAsyncDice}, json=params_GetAsyncResponse_DiceBonusGame)
+    response = response_GetAsyncResponse_DiceBonusGame.json()
+    assert response_GetAsyncResponse_DiceBonusGame.status_code == 200
+    # GetAsyncResponse_ResultId = response['ResultId']
+    return response
+""" -------------------------------------------------------------------------------------------- """
+
+""" SelectCardBonusGame ------------------------------------------------------------------------ """
+def hash_SelectCardBonusGame(RT, ResultId, SpinId, BonusGameID):
+    HASH = hashlib.md5(('SelectCardBonusGame/' + RT + ResultId + SpinId + BonusGameID + A.CardIndex + A.gameKey).encode('utf-8')).hexdigest()
+    # var tmp2 = 'SelectCardBonusGame/' + pm.environment.get("token_crazy") + pm.environment.get("resultId") + pm.environment.get("spinId") + pm.environment.get("BonusGameId") + CardIndex.toString() + gameKey
+    print('hash_SelectCardBonusGame = ', HASH)
+    return HASH
+
+
+# @pytest.mark.parametrize(hash_DiceBonusGame, regToken_crazy_scientist, resultId, BonusGameId, SpinId, Info)
+def SelectCardBonusGame(Hash, regToken, rId, bgId, sId, cIndex, info):
+    params_SelectCardBonusGame = {"Hash": Hash, "Token": regToken, "ResultId": rId, "BonusGameId": bgId, "SpinId": sId, "CardIndex": cIndex, "Info": info}
+    response_SelectCardBonusGame = requests.post(D.DOMAIN + '/bonus/SelectCardBonusGame', params={"Hash": Hash, "Token": regToken, "ResultId": rId, "BonusGameId": bgId, "SpinId": sId, "CardIndex": cIndex, "Info": info}, json=params_SelectCardBonusGame)
+    # //{"Hash":"{{hash_crazy_SelectCardBonusGame}}","Token":"{{token_crazy}}","ResultId":"{{TokenAsync}}","BonusGameId":"{{BonusGameId}}","SpinId":"{{spinId}}","CardIndex":2,"Info":false}
+    response = response_SelectCardBonusGame.json()
+    assert response_SelectCardBonusGame.status_code == 200
+    url = response_SelectCardBonusGame.url
+    print(url)
+    # SelectCardBonusGame_TokenAsync = response['TokenAsync']
+    return response
+""" -------------------------------------------------------------------------------------------- """
+
+""" GetAsyncResponse_SelectCardBonusGame ------------------------------------------------------------- """
+# @pytest.mark.parametrize(regToken_crazy_scientist, TokenAsync)
+def GetAsyncResponse_SelectCardBonusGame(regToken, TokenAsyncCard):
+    hash_GetAsyncResponse_SelectCardBonusGame = hashlib.md5(('GetAsyncResponse/' + TokenAsyncCard + A.gameKey).encode('utf-8')).hexdigest()
+    print('hash_GetAsyncResponseCard = ', hash_GetAsyncResponse_SelectCardBonusGame)
+    params_GetAsyncResponse_SelectCardBonusGame = {'Hash': hash_GetAsyncResponse_SelectCardBonusGame, 'Token': regToken_crazy_scientist, 'TokenAsync': TokenAsyncCard}
+    response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': hash_GetAsyncResponse_SelectCardBonusGame, 'Token': regToken, 'TokenAsync': TokenAsyncCard}, json=params_GetAsyncResponse_SelectCardBonusGame)
     response = response_GetAsyncResponse_DiceBonusGame.json()
     assert response_GetAsyncResponse_DiceBonusGame.status_code == 200
     # GetAsyncResponse_ResultId = response['ResultId']
@@ -167,7 +201,13 @@ while i < 50:
                 print("WinType =", WinType)
                 if WinType == 7:
                     print('! BONUS CARD GAME !')
-                    break
+                    xxx_hash_SelectCardBonusGame = hash_SelectCardBonusGame(regToken_crazy_scientist, GetAsyncResponse_ResultId, spinId, BonusGameId)
+                    xxx_CardBonusGame = SelectCardBonusGame(xxx_hash_SelectCardBonusGame, regToken_crazy_scientist, GetAsyncResponse_ResultId, BonusGameId, spinId, A.CardIndex, Info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
+                    CardBonusGame_TokenAsync = xxx_CardBonusGame["TokenAsync"]
+                    time.sleep(1)
+                    xxx_GetAsyncResponse_CardBonusGame = GetAsyncResponse_SelectCardBonusGame(regToken_crazy_scientist, CardBonusGame_TokenAsync)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
+
+                    # break
             break
     print('i = ', i)
     i = i + 1
