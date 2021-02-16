@@ -82,9 +82,9 @@ class API:
         response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
         response = response_GetAsyncResponse.json()
         assert response_GetAsyncResponse.status_code == 200
-        print(response)
-        # print("ResultId =", response['ResultId'])
-        # print("SpinId =", response["SpinResult"]["Id"])
+        # print(response)
+        print("ResultId =", response['ResultId'])
+        print("SpinId =", response["SpinResult"]["Id"])
         return response
 
     @staticmethod
@@ -144,36 +144,42 @@ api.AuthorizationGame(regToken)
 i = 1
 while i < 50:
     while True:
-        tokenAsync = api.CreditDebit(regToken)['TokenAsync']  # ставка ! CreditDebit # resultId = tokenAsync
-        time.sleep(2)
-        resultId = api.GetAsyncResponse(regToken, tokenAsync)['ResultId']
-        if api.GetAsyncResponse(regToken, tokenAsync)["SpinResult"]["DiceGame"] is None:  # асинхронный ответ ! GetAsyncResponse
+        creditDebit = api.CreditDebit(regToken)  # ставка ! CreditDebit # resultId = tokenAsync
+        tokenAsync = creditDebit["TokenAsync"]
+        time.sleep(1)
+        getAsyncResponse = api.GetAsyncResponse(regToken, tokenAsync)  # асинхронный ответ ! GetAsyncResponse
+        resultId = getAsyncResponse['ResultId']
+        if getAsyncResponse["SpinResult"]["DiceGame"] is None:
             bonusGameId = "no bonus game"
             print("BonusGameId =", bonusGameId)
             continue
         else:
-            bonusGameId = api.GetAsyncResponse(regToken, tokenAsync)["SpinResult"]["DiceGame"]["Id"]
+            bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
             print('\n', "BonusGameId =", bonusGameId, '\n')
             info = 'true'
-            spinId = api.GetAsyncResponse(regToken, tokenAsync)["SpinResult"]["Id"]
-            tokenAsyncDice = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)['TokenAsync']  # кидаем кубик в бонусной игре ! DiceBonusGame
+            spinId = getAsyncResponse["SpinResult"]["Id"]
+            diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)  # кидаем кубик в бонусной игре ! DiceBonusGame
+            tokenAsyncDice = diceBonusGame['TokenAsync']
             time.sleep(1)
-
-            ThrowsLeft = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)["ThrowsLeft"]  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+            getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+            ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
             info = 'false'
             print("ThrowsLeft =", ThrowsLeft)
             while ThrowsLeft > 0:
-                tokenAsyncDice = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)['TokenAsync']  # кидаем кубик в бонусной игре ! DiceBonusGame
+                diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)  # кидаем кубик в бонусной игре ! DiceBonusGame
+                tokenAsyncDice = diceBonusGame['TokenAsync']
                 time.sleep(1)
-                ThrowsLeft = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)["ThrowsLeft"]  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+                getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+                ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
                 print("ThrowsLeft =", ThrowsLeft)
-                WinType = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)["SelectedSector"]["WinType"]
+                WinType = getAsyncResponse_Dice["SelectedSector"]["WinType"]
                 print("WinType =", WinType)
                 if WinType == 7:
                     print('! BONUS CARD GAME !')
-                    tokenAsyncCard = api.SelectCardBonusGame(regToken, resultId, bonusGameId, spinId, A.CardIndex, info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
+                    selectCardBonusGame = api.SelectCardBonusGame(regToken, resultId, bonusGameId, spinId, A.CardIndex, info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
+                    tokenAsyncCard = selectCardBonusGame["TokenAsync"]
                     time.sleep(1)
-                    xxx = api.GetAsyncResponse_Card(regToken, tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
+                    getAsyncResponse_Card = api.GetAsyncResponse_Card(regToken, tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
 
                     # break
             break
