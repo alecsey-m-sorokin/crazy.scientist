@@ -174,7 +174,7 @@ while i < 50:
             continue
         else:
             BonusGameId = xxx_GetAsyncResponse["SpinResult"]["DiceGame"]["Id"]
-            print("BonusGameId =", BonusGameId)
+            print('\n', "BonusGameId =", '\n', BonusGameId)
             Info = 'true'
             spinId = xxx_GetAsyncResponse["SpinResult"]["Id"]
             print("SpinId =", spinId)
