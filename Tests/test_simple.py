@@ -82,8 +82,7 @@ class API:
         response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
         response = response_GetAsyncResponse.json()
         assert response_GetAsyncResponse.status_code == 200
-        if response['Error'] == 13:
-            break
+        # if response['Error'] == 13:
         print('ошибка = ', response['Error'])
         print("ResultId =", response['ResultId'])
         print("SpinId =", response['SpinResult']['Id'])
