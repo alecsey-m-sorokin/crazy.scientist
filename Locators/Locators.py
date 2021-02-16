@@ -1,7 +1,6 @@
 class ErrorCodes:
     error_codes = [10, 11, 13, 49, 50, 51, 64, 100, 101, 102, 105, 108, 109, 110, 113, 114, 115, 116, 150, 151, 152,
-                   200,
-                   205, 206, 207, 208, 209, 210, 211, 212, 213, 214]
+                   200, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214]
     error_codes_messages = ['HashMismatch', 'RoundNotFound', 'AsyncResponseNotFound', 'GambleInfoNotFound',
                             'GambleCalculationError', 'InternalServiceError', 'MySQLRequestFailed', 'MongoSaveError',
                             'CachePartnerNotFound', 'RequestToPartnerFailed', 'PartnerError', 'WrongParamError',

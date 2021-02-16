@@ -5,7 +5,7 @@ import unittest
 import pytest
 import requests
 
-from Locators.Locators import APIdata, DOM
+from Locators.Locators import APIdata, DOM, ErrorCodes
 
 D = DOM
 A = APIdata
@@ -82,8 +82,6 @@ class API:
         response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
         response = response_GetAsyncResponse.json()
         assert response_GetAsyncResponse.status_code == 200
-        # if response['Error'] == 13:
-        print('ошибка = ', response['Error'])
         print("ResultId =", response['ResultId'])
         print("SpinId =", response['SpinResult']['Id'])
         return response
@@ -138,15 +136,12 @@ api = API
 regToken = api.testpartnerservice()
 api.AuthorizationGame(regToken)
 
-# tokenAsync = api.CreditDebit(regToken)['TokenAsync']  # ставка ! CreditDebit # resultId = tokenAsync
-# time.sleep(1)
-# resultId = api.GetAsyncResponse(regToken, tokenAsync)['ResultId']
-
 
 i = 1
 while i < 50:
     creditDebit = api.CreditDebit(regToken)  # ставка ! CreditDebit # resultId = tokenAsync
     tokenAsync = creditDebit["TokenAsync"]
+    time.sleep(2)
     getAsyncResponse = api.GetAsyncResponse(regToken, tokenAsync)  # асинхронный ответ ! GetAsyncResponse
     resultId = getAsyncResponse['ResultId']
     if getAsyncResponse["SpinResult"]["DiceGame"] is None:
