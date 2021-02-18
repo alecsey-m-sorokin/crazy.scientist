@@ -4,6 +4,7 @@ import unittest
 
 import pytest
 import requests
+from parameterized import parameterized
 
 from Locators.Locators import APIdata, DOM
 
@@ -49,7 +50,8 @@ class API:
 
     @staticmethod
     def CreditDebit(RegToken):
-        HASH = hashlib.md5(('CreditDebit/' + RegToken + A.betSum + A.cntLineBet + A.gameKey).encode('utf-8')).hexdigest()
+        HASH = hashlib.md5(
+            ('CreditDebit/' + RegToken + A.betSum + A.cntLineBet + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_CreditDebit = ', HASH)
         params_CreditDebit = {'Hash': HASH, 'Token': RegToken, 'CntLineBet': A.cntLineBet,
                               'BetSum': A.betSum}
@@ -79,7 +81,9 @@ class API:
         HASH = hashlib.md5(('GetAsyncResponse/' + TokenAsync + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_GetAsyncResponse = ', HASH)
         params_GetAsyncResponse = {'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}
-        response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
+        response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse',
+                                                  params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync},
+                                                  json=params_GetAsyncResponse)
         response = response_GetAsyncResponse.json()
         assert response_GetAsyncResponse.status_code == 200
         # print(response)
@@ -89,10 +93,15 @@ class API:
 
     @staticmethod
     def DiceBonusGame(RegToken, ResultId, BonusGameId, SpinId, Info):
-        HASH = hashlib.md5(('DiceBonusGame/' + RegToken + ResultId + SpinId + BonusGameId + A.gameKey).encode('utf-8')).hexdigest()
+        HASH = hashlib.md5(
+            ('DiceBonusGame/' + RegToken + ResultId + SpinId + BonusGameId + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_DiceBonusGame = ', HASH)
-        params_DiceBonusGame = {"Hash": HASH, "Token": RegToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "Info": Info}
-        response_DiceBonusGame = requests.post(D.DOMAIN + '/bonus/DiceBonusGame', params={"Hash": HASH, "Token": RegToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "Info": Info}, json=params_DiceBonusGame)
+        params_DiceBonusGame = {"Hash": HASH, "Token": RegToken, "ResultId": ResultId, "BonusGameId": BonusGameId,
+                                "SpinId": SpinId, "Info": Info}
+        response_DiceBonusGame = requests.post(D.DOMAIN + '/bonus/DiceBonusGame',
+                                               params={"Hash": HASH, "Token": RegToken, "ResultId": ResultId,
+                                                       "BonusGameId": BonusGameId, "SpinId": SpinId, "Info": Info},
+                                               json=params_DiceBonusGame)
         response = response_DiceBonusGame.json()
         assert response_DiceBonusGame.status_code == 200
         url = response_DiceBonusGame.url
@@ -104,7 +113,10 @@ class API:
         HASH = hashlib.md5(('GetAsyncResponse/' + TokenAsyncDice + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_GetAsyncResponseDice = ', HASH)
         params_GetAsyncResponse_DiceBonusGame = {'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsyncDice}
-        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsyncDice}, json=params_GetAsyncResponse_DiceBonusGame)
+        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse',
+                                                                params={'Hash': HASH, 'Token': RegToken,
+                                                                        'TokenAsync': TokenAsyncDice},
+                                                                json=params_GetAsyncResponse_DiceBonusGame)
         response = response_GetAsyncResponse_DiceBonusGame.json()
         assert response_GetAsyncResponse_DiceBonusGame.status_code == 200
         # GetAsyncResponse_ResultId = response['ResultId']
@@ -112,10 +124,17 @@ class API:
 
     @staticmethod
     def SelectCardBonusGame(RegToken, ResultId, BonusGameId, SpinId, CardIndex, Info):
-        HASH = hashlib.md5(('SelectCardBonusGame/' + RegToken + ResultId + SpinId + BonusGameId + A.CardIndex + A.gameKey).encode('utf-8')).hexdigest()
+        HASH = hashlib.md5(
+            ('SelectCardBonusGame/' + RegToken + ResultId + SpinId + BonusGameId + A.CardIndex + A.gameKey).encode(
+                'utf-8')).hexdigest()
         print('hash_SelectCardBonusGame = ', HASH)
-        params_SelectCardBonusGame = {"Hash": HASH, "Token": regToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}
-        response_SelectCardBonusGame = requests.post(D.DOMAIN + '/bonus/SelectCardBonusGame', params={"Hash": HASH, "Token": regToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}, json=params_SelectCardBonusGame)
+        params_SelectCardBonusGame = {"Hash": HASH, "Token": regToken, "ResultId": ResultId, "BonusGameId": BonusGameId,
+                                      "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}
+        response_SelectCardBonusGame = requests.post(D.DOMAIN + '/bonus/SelectCardBonusGame',
+                                                     params={"Hash": HASH, "Token": regToken, "ResultId": ResultId,
+                                                             "BonusGameId": BonusGameId, "SpinId": SpinId,
+                                                             "CardIndex": CardIndex, "Info": Info},
+                                                     json=params_SelectCardBonusGame)
         response = response_SelectCardBonusGame.json()
         assert response_SelectCardBonusGame.status_code == 200
         print('SelectCardBonusGame_TokenAsync = ', response['TokenAsync'])
@@ -126,66 +145,72 @@ class API:
         HASH = hashlib.md5(('GetAsyncResponse/' + TokenAsyncCard + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_GetAsyncResponseCard = ', HASH)
         params_GetAsyncResponse_SelectCardBonusGame = {'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsyncCard}
-        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': regToken, 'TokenAsync': TokenAsyncCard}, json=params_GetAsyncResponse_SelectCardBonusGame)
+        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse',
+                                                                params={'Hash': HASH, 'Token': regToken,
+                                                                        'TokenAsync': TokenAsyncCard},
+                                                                json=params_GetAsyncResponse_SelectCardBonusGame)
         response = response_GetAsyncResponse_DiceBonusGame.json()
         assert response_GetAsyncResponse_DiceBonusGame.status_code == 200
         return response
 
 
-api = API
-regToken = api.testpartnerservice()
-api.AuthorizationGame(regToken)
+# api = API
+# regToken = api.testpartnerservice()
+# api.AuthorizationGame(regToken)
 
 # tokenAsync = api.CreditDebit(regToken)['TokenAsync']  # ставка ! CreditDebit # resultId = tokenAsync
 # time.sleep(1)
 # resultId = api.GetAsyncResponse(regToken, tokenAsync)['ResultId']
 
 
-i = 1
-while i < 50:
-    while True:
-        creditDebit = api.CreditDebit(regToken)  # ставка ! CreditDebit # resultId = tokenAsync
-        tokenAsync = creditDebit["TokenAsync"]
-        time.sleep(1)
-        getAsyncResponse = api.GetAsyncResponse(regToken, tokenAsync)  # асинхронный ответ ! GetAsyncResponse
-        resultId = getAsyncResponse['ResultId']
-        if getAsyncResponse["SpinResult"]["DiceGame"] is None:
-            bonusGameId = "no bonus game"
-            print("BonusGameId =", bonusGameId)
-            print('i = ', i)
-            i = i + 1
-            continue
-        else:
-            bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
-            print('\n', "BonusGameId =", bonusGameId, '\n')
-            info = 'true'
-            spinId = getAsyncResponse["SpinResult"]["Id"]
-            diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)  # кидаем кубик в бонусной игре ! DiceBonusGame
-            tokenAsyncDice = diceBonusGame['TokenAsync']
-            time.sleep(1)
-            getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
-            ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
-            info = 'false'
-            print("ThrowsLeft =", ThrowsLeft)
-            while ThrowsLeft > 0:
-                diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId, info)  # кидаем кубик в бонусной игре ! DiceBonusGame
-                tokenAsyncDice = diceBonusGame['TokenAsync']
-                time.sleep(1)
-                getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken, tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
-                ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
-                print("ThrowsLeft =", ThrowsLeft)
-                WinType = getAsyncResponse_Dice["SelectedSector"]["WinType"]
-                print("WinType =", WinType)
-                if WinType == 7:
-                    print('! BONUS CARD GAME !')
-                    selectCardBonusGame = api.SelectCardBonusGame(regToken, resultId, bonusGameId, spinId, A.CardIndex, info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
-                    tokenAsyncCard = selectCardBonusGame["TokenAsync"]
-                    time.sleep(1)
-                    getAsyncResponse_Card = api.GetAsyncResponse_Card(regToken, tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
-
-                    # break
-            break
-
-
-if __name__ == "__main__":
-    unittest.main()
+# i = 0
+# while i < 7:
+#     creditDebit = api.CreditDebit(regToken)  # ставка ! CreditDebit # resultId = tokenAsync
+#     tokenAsync = creditDebit["TokenAsync"]
+#     time.sleep(1)
+#     getAsyncResponse = api.GetAsyncResponse(regToken, tokenAsync)  # асинхронный ответ ! GetAsyncResponse
+#     resultId = getAsyncResponse['ResultId']
+#     if getAsyncResponse["SpinResult"]["DiceGame"] is None:
+#         bonusGameId = "no bonus game"
+#         print("BonusGameId =", bonusGameId)
+#         print('i = ', i)
+#         i = i + 1
+#         # continue
+#     else:
+#         bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
+#         print('\n', "BonusGameId =", bonusGameId, '\n')
+#         info = 'true'
+#         spinId = getAsyncResponse["SpinResult"]["Id"]
+#         diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId,
+#                                           info)  # кидаем кубик в бонусной игре ! DiceBonusGame
+#         tokenAsyncDice = diceBonusGame['TokenAsync']
+#         time.sleep(1)
+#         getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken,
+#                                                           tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+#         ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
+#         info = 'false'
+#         print("ThrowsLeft =", ThrowsLeft)
+#         while ThrowsLeft > 0:
+#             diceBonusGame = api.DiceBonusGame(regToken, resultId, bonusGameId, spinId,
+#                                               info)  # кидаем кубик в бонусной игре ! DiceBonusGame
+#             tokenAsyncDice = diceBonusGame['TokenAsync']
+#             time.sleep(1)
+#             getAsyncResponse_Dice = api.GetAsyncResponse_Dice(regToken,
+#                                                               tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+#             ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
+#             print("ThrowsLeft =", ThrowsLeft)
+#             WinType = getAsyncResponse_Dice["SelectedSector"]["WinType"]
+#             print("WinType =", WinType)
+#             if WinType == 7:
+#                 print('! BONUS CARD GAME !')
+#                 selectCardBonusGame = api.SelectCardBonusGame(regToken, resultId, bonusGameId, spinId, A.CardIndex,
+#                                                               info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
+#                 tokenAsyncCard = selectCardBonusGame["TokenAsync"]
+#                 time.sleep(1)
+#                 getAsyncResponse_Card = api.GetAsyncResponse_Card(regToken,
+#                                                                   tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
+#
+# print('finished after %s times' % i)
+#
+# if __name__ == "__main__":
+#     unittest.main()

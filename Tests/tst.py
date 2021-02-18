@@ -83,4 +83,4 @@ while i < 50:
         print('i = ', i)
         i = i + 1
     else:
-        break
+        print('ups ...')
