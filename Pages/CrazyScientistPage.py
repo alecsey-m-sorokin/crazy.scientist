@@ -152,6 +152,8 @@ while i < 50:
         if getAsyncResponse["SpinResult"]["DiceGame"] is None:
             bonusGameId = "no bonus game"
             print("BonusGameId =", bonusGameId)
+            print('i = ', i)
+            i = i + 1
             continue
         else:
             bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
@@ -183,9 +185,6 @@ while i < 50:
 
                     # break
             break
-
-    print('i = ', i)
-    i = i + 1
 
 
 if __name__ == "__main__":
