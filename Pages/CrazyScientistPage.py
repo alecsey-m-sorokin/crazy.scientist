@@ -49,19 +49,34 @@ class API:
         return response
 
     @staticmethod
-    def CreditDebit(RegToken):
+    def CreditDebit(RegToken, betSum, cntLineBet):
         HASH = hashlib.md5(
-            ('CreditDebit/' + RegToken + A.betSum + A.cntLineBet + A.gameKey).encode('utf-8')).hexdigest()
+            ('CreditDebit/' + RegToken + betSum + cntLineBet + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_CreditDebit = ', HASH)
-        params_CreditDebit = {'Hash': HASH, 'Token': RegToken, 'CntLineBet': A.cntLineBet,
-                              'BetSum': A.betSum}
+        params_CreditDebit = {'Hash': HASH, 'Token': RegToken, 'CntLineBet': cntLineBet,
+                              'BetSum': betSum}
         response_CreditDebit = requests.post(D.DOMAIN + '/games/CreditDebit',
-                                             params={'Hash': HASH, 'Token': RegToken, 'CntLineBet': A.cntLineBet,
-                                                     'BetSum': A.betSum}, json=params_CreditDebit)
+                                             params={'Hash': HASH, 'Token': RegToken, 'CntLineBet': cntLineBet,
+                                                     'BetSum': betSum}, json=params_CreditDebit)
         response = response_CreditDebit.json()
         assert response_CreditDebit.status_code == 200
         print('CreditDebit_TokenAsync = ', response['TokenAsync'])
         return response
+
+    # @staticmethod
+    # def CreditDebit(RegToken):
+    #     HASH = hashlib.md5(
+    #         ('CreditDebit/' + RegToken + A.betSum + A.cntLineBet + A.gameKey).encode('utf-8')).hexdigest()
+    #     print('hash_CreditDebit = ', HASH)
+    #     params_CreditDebit = {'Hash': HASH, 'Token': RegToken, 'CntLineBet': A.cntLineBet,
+    #                           'BetSum': A.betSum}
+    #     response_CreditDebit = requests.post(D.DOMAIN + '/games/CreditDebit',
+    #                                          params={'Hash': HASH, 'Token': RegToken, 'CntLineBet': A.cntLineBet,
+    #                                                  'BetSum': A.betSum}, json=params_CreditDebit)
+    #     response = response_CreditDebit.json()
+    #     assert response_CreditDebit.status_code == 200
+    #     print('CreditDebit_TokenAsync = ', response['TokenAsync'])
+    #     return response
 
     @staticmethod
     def GetAsyncResponse(RegToken, TokenAsync):

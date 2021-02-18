@@ -26,26 +26,76 @@ class TestCrazySlots(unittest.TestCase):
         cls.regToken = cls.api.testpartnerservice()
         cls.api.AuthorizationGame(cls.regToken)
 
-    def test_01_crazy_slots(self):
-        i = 0
-        while i < 7:
-            creditDebit = self.api.CreditDebit(self.regToken)  # ставка ! CreditDebit # resultId = tokenAsync
-            tokenAsync = creditDebit["TokenAsync"]
-            time.sleep(2)
-            getAsyncResponse = self.api.GetAsyncResponse(self.regToken,
-                                                         tokenAsync)  # асинхронный ответ ! GetAsyncResponse
-            resultId = getAsyncResponse['ResultId']
-            if getAsyncResponse["SpinResult"]["DiceGame"] is None:
-                bonusGameId = "no bonus game"
-                print("BonusGameId =", bonusGameId)
-                print('i = ', i)
-                i = i + 1
-                # continue
-            else:
-                bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
-                print('\n', "BonusGameId =", bonusGameId, '\n')
-                info = 'true'
-                spinId = getAsyncResponse["SpinResult"]["Id"]
+    # @parameterized.expand([('1', '25'),
+    #                        ('2', '25'),
+    #                        ('3', '25'),
+    #                        ('4', '25'),
+    #                        ('5', '25'),
+    #                        ('6', '25'),
+    #                        ('7', '25'),
+    #                        ('8', '25'),
+    #                        ('9', '25'),
+    #                        ('10', '25'),
+    #                        ('15', '25'),
+    #                        ('20', '25'),
+    #                        ('25', '25'),
+    #                        ('30', '25'),
+    #                        ('40', '25'),
+    #                        ('50', '25'),
+    #                        ('60', '25'),
+    #                        ('70', '25'),
+    #                        ('80', '25'),
+    #                        ('90', '25')
+    #                        ])
+
+    @parameterized.expand([('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25'),
+                           ('1', '25')
+                           ])
+    def test_01_crazy_slots(self, betSum, cntLineBet):
+        creditDebit = self.api.CreditDebit(self.regToken, betSum,
+                                           cntLineBet)  # ставка ! CreditDebit # resultId = tokenAsync
+        tokenAsync = creditDebit["TokenAsync"]
+        time.sleep(2)
+        getAsyncResponse = self.api.GetAsyncResponse(self.regToken,
+                                                     tokenAsync)  # асинхронный ответ ! GetAsyncResponse
+        resultId = getAsyncResponse['ResultId']
+        if getAsyncResponse["SpinResult"]["DiceGame"] is None:
+            bonusGameId = "no bonus game"
+            print("BonusGameId =", bonusGameId)
+            print('betSum = %s , cntLineBet = %s' % (betSum, cntLineBet))
+        else:
+            bonusGameId = getAsyncResponse["SpinResult"]["DiceGame"]["Id"]
+            print('\n', "BonusGameId =", bonusGameId, '\n')
+            info = 'true'
+            spinId = getAsyncResponse["SpinResult"]["Id"]
+            diceBonusGame = self.api.DiceBonusGame(self.regToken, resultId, bonusGameId, spinId,
+                                                   info)  # кидаем кубик в бонусной игре ! DiceBonusGame
+            tokenAsyncDice = diceBonusGame['TokenAsync']
+            time.sleep(1)
+            getAsyncResponse_Dice = self.api.GetAsyncResponse_Dice(self.regToken,
+                                                                   tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
+            ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
+            info = 'false'
+            print("ThrowsLeft =", ThrowsLeft)
+            while ThrowsLeft > 0:
                 diceBonusGame = self.api.DiceBonusGame(self.regToken, resultId, bonusGameId, spinId,
                                                        info)  # кидаем кубик в бонусной игре ! DiceBonusGame
                 tokenAsyncDice = diceBonusGame['TokenAsync']
@@ -53,30 +103,25 @@ class TestCrazySlots(unittest.TestCase):
                 getAsyncResponse_Dice = self.api.GetAsyncResponse_Dice(self.regToken,
                                                                        tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
                 ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
-                info = 'false'
                 print("ThrowsLeft =", ThrowsLeft)
-                while ThrowsLeft > 0:
-                    diceBonusGame = self.api.DiceBonusGame(self.regToken, resultId, bonusGameId, spinId,
-                                                           info)  # кидаем кубик в бонусной игре ! DiceBonusGame
-                    tokenAsyncDice = diceBonusGame['TokenAsync']
+                WinType = getAsyncResponse_Dice["SelectedSector"]["WinType"]
+                print("WinType =", WinType)
+                if WinType == 7:
+                    print('! BONUS CARD GAME !')
+                    print(self.regToken)
+                    selectCardBonusGame = self.api.SelectCardBonusGame(self.regToken, resultId, bonusGameId, spinId,
+                                                                       A.CardIndex,
+                                                                       info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
+                    tokenAsyncCard = selectCardBonusGame["TokenAsync"]
                     time.sleep(1)
-                    getAsyncResponse_Dice = self.api.GetAsyncResponse_Dice(self.regToken,
-                                                                           tokenAsyncDice)  # асинхронный ответ в бонусной игре ! GetAsyncResponse
-                    ThrowsLeft = getAsyncResponse_Dice["ThrowsLeft"]
-                    print("ThrowsLeft =", ThrowsLeft)
-                    WinType = getAsyncResponse_Dice["SelectedSector"]["WinType"]
-                    print("WinType =", WinType)
-                    if WinType == 7:
-                        print('! BONUS CARD GAME !')
-                        selectCardBonusGame = self.api.SelectCardBonusGame(self.regToken, resultId, bonusGameId, spinId,
-                                                                           A.CardIndex,
-                                                                           info)  # # кидаем кубик в бонусной карточной игре ! SelectCardBonusGame
-                        tokenAsyncCard = selectCardBonusGame["TokenAsync"]
-                        time.sleep(1)
-                        getAsyncResponse_Card = self.api.GetAsyncResponse_Card(self.regToken,
-                                                                               tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
+                    getAsyncResponse_Card = self.api.GetAsyncResponse_Card(self.regToken,
+                                                                           tokenAsyncCard)  # асинхронный ответ в бонусной карточной игре ! GetAsyncResponse
+                elif WinType == 6:
+                    print('! Loose All !')
+                elif WinType == 1:
+                    print('! Coins !')
 
-        print('finished after %s times' % i)
+    # print('finished after %s times' % i)
 
 
 if __name__ == "__main__":
