@@ -11,6 +11,30 @@ class ErrorCodes:
                             'WrongLogic', 'NoAvailableFreeSpins', 'UserNotFound', 'TokenError']
 
 
+bets = [
+    ('1', '25'),
+    ('2', '25'),
+    ('3', '25'),
+    ('4', '25'),
+    ('5', '25'),
+    ('6', '25'),
+    ('7', '25'),
+    ('8', '25'),
+    ('9', '25'),
+    ('10', '25'),
+    ('15', '25'),
+    ('20', '25'),
+    ('25', '25'),
+    ('30', '25'),
+    ('40', '25'),
+    ('50', '25'),
+    ('60', '25'),
+    ('70', '25'),
+    ('80', '25'),
+    ('90', '25')
+]
+
+
 class DOM:
     DOMAIN_tps = 'https://testpartnerservice.carhenge.space/setup/'
     # DOMAIN = 'https://test-games-api.carhenge.space'

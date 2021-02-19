@@ -4,18 +4,17 @@ import unittest
 
 import pytest
 from parameterized import parameterized
-from Locators.Locators import APIdata, DOM
+from Locators.Locators import APIdata, DOM, bets
 from Pages.CrazyScientistPage import API
 
-D = DOM
-A = APIdata
-
-
+# D = DOM
+# A = APIdata
 # api = API
 # regToken = api.testpartnerservice()
 # api.AuthorizationGame(regToken)
 # i = 0
-# @parameterized.expand([('1', '25'), ('1', '25'), ('1', '25')])
+# @parameterized.expand([('1', '25'), ('2', '25'), ('3', '25'), ('4', '25'), ('5', '25')])
+
 
 class TestCrazySlots(unittest.TestCase):
     @classmethod
@@ -26,49 +25,7 @@ class TestCrazySlots(unittest.TestCase):
         cls.regToken = cls.api.testpartnerservice()
         cls.api.AuthorizationGame(cls.regToken)
 
-    # @parameterized.expand([('1', '25'),
-    #                        ('2', '25'),
-    #                        ('3', '25'),
-    #                        ('4', '25'),
-    #                        ('5', '25'),
-    #                        ('6', '25'),
-    #                        ('7', '25'),
-    #                        ('8', '25'),
-    #                        ('9', '25'),
-    #                        ('10', '25'),
-    #                        ('15', '25'),
-    #                        ('20', '25'),
-    #                        ('25', '25'),
-    #                        ('30', '25'),
-    #                        ('40', '25'),
-    #                        ('50', '25'),
-    #                        ('60', '25'),
-    #                        ('70', '25'),
-    #                        ('80', '25'),
-    #                        ('90', '25')
-    #                        ])
-
-    @parameterized.expand([('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25'),
-                           ('1', '25')
-                           ])
+    @parameterized.expand(bets)
     def test_01_crazy_slots(self, betSum, cntLineBet):
         creditDebit = self.api.CreditDebit(self.regToken, betSum,
                                            cntLineBet)  # ставка ! CreditDebit # resultId = tokenAsync
