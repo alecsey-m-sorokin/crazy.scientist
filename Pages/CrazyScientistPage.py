@@ -5,14 +5,13 @@ import unittest
 import pytest
 import requests
 
-from Locators.Locators import APIdata, DOM
+from Locators.Locators import APIdata, DOM, ErrorCodes
 
 D = DOM
 A = APIdata
-
+CR = ErrorCodes
 
 class API:
-
     @staticmethod
     def testpartnerservice():
         params = {'gameURL': D.gameURL, 'frontURL': D.frontURL, 'partnerURL': D.partnerURL, 'partnerId': A.partnerID,
@@ -96,9 +95,14 @@ class API:
         response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
         response = response_GetAsyncResponse.json()
         assert response_GetAsyncResponse.status_code == 200
-        # print(response)
-        print("ResultId =", response['ResultId'])
-        print("SpinId =", response["SpinResult"]["Id"])
+        crErrors = CR.crazy_errors.keys()
+        while "Error" in response:
+            time.sleep(1)
+            response_GetAsyncResponse = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsync}, json=params_GetAsyncResponse)
+            response = response_GetAsyncResponse.json()
+        else:
+            print("ResultId =", response['ResultId'])
+            print("SpinId =", response["SpinResult"]["Id"])
         return response
 
     @staticmethod
@@ -128,8 +132,8 @@ class API:
     def SelectCardBonusGame(RegToken, ResultId, BonusGameId, SpinId, CardIndex, Info):
         HASH = hashlib.md5(('SelectCardBonusGame/' + RegToken + ResultId + SpinId + BonusGameId + A.CardIndex + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_SelectCardBonusGame = ', HASH)
-        params_SelectCardBonusGame = {"Hash": HASH, "Token": regToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}
-        response_SelectCardBonusGame = requests.post(D.DOMAIN + '/bonus/SelectCardBonusGame', params={"Hash": HASH, "Token": regToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}, json=params_SelectCardBonusGame)
+        params_SelectCardBonusGame = {"Hash": HASH, "Token": RegToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}
+        response_SelectCardBonusGame = requests.post(D.DOMAIN + '/bonus/SelectCardBonusGame', params={"Hash": HASH, "Token": RegToken, "ResultId": ResultId, "BonusGameId": BonusGameId, "SpinId": SpinId, "CardIndex": CardIndex, "Info": Info}, json=params_SelectCardBonusGame)
         response = response_SelectCardBonusGame.json()
         assert response_SelectCardBonusGame.status_code == 200
         print('SelectCardBonusGame_TokenAsync = ', response['TokenAsync'])
@@ -140,7 +144,7 @@ class API:
         HASH = hashlib.md5(('GetAsyncResponse/' + TokenAsyncCard + A.gameKey).encode('utf-8')).hexdigest()
         print('hash_GetAsyncResponseCard = ', HASH)
         params_GetAsyncResponse_SelectCardBonusGame = {'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsyncCard}
-        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': regToken, 'TokenAsync': TokenAsyncCard}, json=params_GetAsyncResponse_SelectCardBonusGame)
+        response_GetAsyncResponse_DiceBonusGame = requests.post(D.DOMAIN + '/games/GetAsyncResponse', params={'Hash': HASH, 'Token': RegToken, 'TokenAsync': TokenAsyncCard}, json=params_GetAsyncResponse_SelectCardBonusGame)
         response = response_GetAsyncResponse_DiceBonusGame.json()
         assert response_GetAsyncResponse_DiceBonusGame.status_code == 200
         return response
